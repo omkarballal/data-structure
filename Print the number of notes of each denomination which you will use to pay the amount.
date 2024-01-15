@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+void pay_amount(int purse[7], int amount) {
+    int denominations[7] = {100, 50, 20, 10, 5, 2, 1};
+    int notes_used[7] = {0};
+
+    for (int i = 0; i < 7; ++i) {
+        notes_used[i] = (amount / denominations[i] < purse[i]) ? (amount / denominations[i]) : purse[i];
+        amount -= notes_used[i] * denominations[i];
+    }
+
+    if (amount == 0) {
+        printf("Number of notes used to pay the amount:\n");
+        for (int i = 0; i < 7; ++i) {
+            printf("Rs. %d: %d\n", denominations[i], notes_used[i]);
+        }
+    } else {
+        printf("Failed to Pay\n");
+    }
+}
+
+int main() {
+    int purse[7] = {5, 3, 2, 7, 4, 6, 8};  // Replace this array with your input
+    int amount_to_pay;
+    printf("enter the amount to pay : ");
+    scanf("%d",&amount_to_pay);
+    pay_amount(purse, amount_to_pay);
+
+    return 0;
+}
