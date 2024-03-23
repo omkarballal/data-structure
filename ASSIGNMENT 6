@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+ int data;
+ struct Node* left;
+ struct Node* right;
+};
+struct BST {
+ struct Node* root;
+};
+struct Node* createNode(int value) {
+ struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+ newNode->data = value;
+ newNode->left = newNode->right = NULL;
+ return newNode;
+}
+struct Node* insertRecursive(struct Node* root, int value) {
+ if (root == NULL) {
+ return createNode(value);
+ }
+ if (value < root->data) {
+ root->left = insertRecursive(root->left, value);
+ } else if (value > root->data) {
+ root->right = insertRecursive(root->right, value);
+ }
+ return root;
+}
+void inorderTraversal(struct Node* root) {
+ if (root != NULL) {
+ inorderTraversal(root->left);
+ printf("%d ", root->data);
+ inorderTraversal(root->right);
+ }
+}
+void preorderTraversal(struct Node* root) {
+ if (root != NULL) {
+ printf("%d ", root->data);
+ preorderTraversal(root->left);
+ preorderTraversal(root->right);
+ }
+}
+void postorderTraversal(struct Node* root) {
+ if (root != NULL) {
+ postorderTraversal(root->left);
+ postorderTraversal(root->right);
+ printf("%d ", root->data);
+ }
+}
+struct Node* searchRecursive(struct Node* root, int key) {
+ if (root == NULL || root->data == key) {
+ return root;
+ }
+ if (key < root->data) {
+ return searchRecursive(root->left, key);
+ }
+ return searchRecursive(root->right, key);
+}
+struct BST* createBST() {
+ struct BST* bst = (struct BST*)malloc(sizeof(struct BST));
+ bst->root = NULL;
+ return bst;
+}
+void insert(struct BST* bst, int value) {
+ bst->root = insertRecursive(bst->root, value);
+}
+void inorder(struct BST* bst) {
+ printf("Inorder traversal: ");
+ inorderTraversal(bst->root);
+ printf("\n");
+}
+void preorder(struct BST* bst) {
+ printf("Preorder traversal: ");
+ preorderTraversal(bst->root);
+ printf("\n");
+}
+void postorder(struct BST* bst) {
+ printf("Postorder traversal: ");
+ postorderTraversal(bst->root);
+ printf("\n");
+}
+struct Node* search(struct BST* bst, int key) {
+ return searchRecursive(bst->root, key);
+}
+int main() {
+ struct BST* bst = createBST();
+ int choice, key;
+ int elements[] = {6, 9, 5, 2, 8, 15, 24, 14, 7, 8, 5, 2};
+ int numElements = sizeof(elements) / sizeof(elements[0]);
+ for (int i = 0; i < numElements; ++i) {
+ insert(bst, elements[i]);
+ }
+ do {
+ printf("\n----- Binary Search Tree Operations -----\n");
+ printf("1. Inorder Traversal\n");
+ printf("2. Preorder Traversal\n");
+ printf("3. Postorder Traversal\n");
+ printf("4. Search Element\n");
+ printf("5. Exit\n");
+ printf("Enter your choice: ");
+ scanf("%d", &choice);
+ switch (choice) {
+ case 1:
+ inorder(bst);
+ break;
+ case 2:
+ preorder(bst);
+ break;
+ case 3:
+ postorder(bst);
+ break;
+ case 4:
+ printf("Enter element to search: ");
+ scanf("%d", &key);
+ struct Node* result = search(bst, key);
+ if (result != NULL) {
+ printf("Element %d found in the BST.\n", key);
+ } else {
+ printf("Element %d not found in the BST.\n", key);
+ }
+ break;
+ case 5:
+ printf("Exiting program.\n");
+ break;
+ default:
+ printf("Invalid choice. Please enter a valid option.\n");
+ }
+ } while (choice != 5);
+ return 0;
+}
